@@ -11,9 +11,39 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 """
 
 from pathlib import Path
+import os
+# import dj_database_url
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+# .env config:
+# from dotenv import load_dotenv, find_dotenv
+# load_dotenv(find_dotenv())
+
+# Determine if we are on local or production
+if os.getenv('ENV') == 'development':
+  # If we are on development, use the `DB_NAME_DEV` value
+  # from the .env file as the database name
+  DB_NAME = os.getenv('DB_NAME_DEV')
+  DB = {
+      'ENGINE': 'django.db.backends.postgresql',
+      'NAME': DB_NAME,
+  }
+  # Set debug to true
+  DEBUG = True
+  # Only allow locally running client at port 8000 for CORS
+  CORS_ORIGIN_WHITELIST = ['http://localhost:8000']
+# else:
+#   # If we are on production, use the dj_database_url package
+#   # to locate the database based on Heroku setup
+#   DB = dj_database_url.config()
+#   # Set debug to false
+#   DEBUG = False
+#   # Only allow the `CLIENT_ORIGIN` for CORS
+#   CORS_ORIGIN_WHITELIST = [
+#     os.getenv('CLIENT_ORIGIN')
+#   ]
+
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 # Quick-start development settings - unsuitable for production
@@ -77,9 +107,9 @@ WSGI_APPLICATION = 'tides.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+      'ENGINE': 'django.db.backends.postgresql',
+      'NAME': 'tides-db',
+  }
 }
 
 
@@ -103,7 +133,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTH_USER_MODEL = 'api.User'
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/dev/topics/i18n/
 
@@ -122,6 +151,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/dev/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/dev/ref/settings/#default-auto-field
