@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied
@@ -74,3 +74,13 @@ class SignIn(generics.CreateAPIView):
         else:
             return Response({ 'msg': 'The username and/or password is incorrect.' }, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
+# Sign Out
+class SignOut(generics.DestroyAPIView):
+    """Sign user out"""
+    def delete(self, request):
+        # Remove user's token from db
+        request.user.delete_token()
+        # Logout (removing session data)
+        logout(request)
+        # Send logout confirmation to user
+        return Response(status=status.HTTP_204_NO_CONTENT)
