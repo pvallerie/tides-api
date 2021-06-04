@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import index, SignUp, SignIn
+from .views import index, SignUp, SignIn, SignOut
 
 urlpatterns = [
     # test view
@@ -8,4 +8,5 @@ urlpatterns = [
     # auth views
     path('sign-up/', SignUp.as_view(), name='sign-up'),
     path('sign-in/', SignIn.as_view(), name='sign-in'),
+    path('sign-out/', SignOut.as_view(), name='sign-out'),
 ]
