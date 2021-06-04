@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied
@@ -38,3 +38,38 @@ class SignUp(generics.CreateAPIView):
         
         else:
             return Response(user.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# Sign In
+class SignIn(generics.CreateAPIView):
+    """View to sing User in"""
+    # override auth/permission classes
+    authentication_classes = ()
+    permission_classes = ()
+
+    serializer_class = UserSerializer
+
+    def post(self, request):
+        creds = request.data['credentials']
+        print(creds)
+        user = authenticate(request, email=creds['email'], password=creds['password'])
+        # If user is authenticated
+        if user is not None:
+            # And they're active
+            if user.is_active():
+                # Log them in
+                login(request, user)
+                # Send response with user's token
+                return Response({
+                    'user': {
+                        'id': user.id,
+                        'email': user.email,
+                        'token': user.get_auth_token()
+                    }
+                })
+            # If they're not active, send 400
+            else:
+                return Response({ 'msg': 'The account is inactive.' }, status=status.HTTP_400_BAD_REQUEST)
+        # If they're not authenticated
+        else:
+            return Response({ 'msg': 'The username and/or password is incorrect.' }, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+            
