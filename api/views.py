@@ -8,7 +8,7 @@ from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse
 
 from .serializers import UserSerializer, UserSignUpSerializer, CreateLocationSerializer
-from .models import User
+from .models import User, Location
 
 # test view
 def index(request):
