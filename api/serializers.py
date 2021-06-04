@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
+from .models import Location
 
 # from .models import User
 
@@ -31,6 +32,12 @@ class UserSignUpSerializer(serializers.Serializer):
 
         # if we pass checks, return data
         return data
+
+class CreateLocationSerializer(serializers.ModelSerializer):
+    """Creates location for user"""
+    class Meta:
+        model = Location
+        fields = ('name', 'owner', 'id')
 
 # class ChangeLocationSerializer(serializers.Serializer):
 #     """Updates user's location"""
