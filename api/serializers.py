@@ -7,7 +7,7 @@ class UserSerializer(serializers.ModelSerializer):
     """Serializer to be used for User creation"""
     class Meta:
         model = get_user_model()
-        fields = ('id', 'email', 'password', 'location')
+        fields = ('id', 'email', 'password')
         extra_kwargs = { 'password': { 'write_only': True, 'min_length': 5 } }
     
     # Method for User model creation
@@ -19,7 +19,6 @@ class UserSignUpSerializer(serializers.Serializer):
     email = serializers.CharField(max_length=300, required=True)
     password = serializers.CharField(required=True)
     password_confirmation = serializers.CharField(required=True, write_only=True)
-    location = serializers.CharField(max_length=200, required=True)
 
     def validate(self, data):
         # check for pw and pw confirmation
@@ -33,7 +32,7 @@ class UserSignUpSerializer(serializers.Serializer):
         # if we pass checks, return data
         return data
 
-class ChangeLocation(serializers.Serializer):
-    """Updates user's location"""
-    model = get_user_model()
-    new_location = serializers.CharField(max_length=200, required=True)
+# class ChangeLocationSerializer(serializers.Serializer):
+#     """Updates user's location"""
+#     model = get_user_model()
+#     new_location = serializers.CharField(max_length=200, required=True)

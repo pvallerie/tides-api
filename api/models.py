@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user, get_user_model
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.conf import settings
@@ -28,7 +29,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     """Database model for users"""
     email = models.EmailField(max_length=225, unique=True)
     is_active = models.BooleanField(default=True)
-    location = models.CharField(max_length=200)
 
     # objects property will reference UserManager class
     objects = UserManager()
@@ -39,6 +39,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         """Return user's email"""
         return self.email
+
+    # def set_location(self, new_location):
+    #     """Update user's location"""
+    #     # update location
+    #     self.location = new_location
+    #     # save to database
+    #     self.save()
+    #     return self
     
     def get_auth_token(self):
         """Get new token for user"""
@@ -61,3 +69,13 @@ class User(AbstractBaseUser, PermissionsMixin):
         # save to database
         self.save()
         return self
+
+class Location(models.Model):
+    name = models.CharField(max_length=200)
+    owner = models.ForeignKey(
+        get_user_model(),
+        related_name='location',
+        on_delete=models.CASCADE
+    )
+    def __str__(self):
+        return f"'{self.name}' belongs to '{self.owner}'"

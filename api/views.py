@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied
 from rest_framework import status, generics
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse
 
 from .serializers import UserSerializer, UserSignUpSerializer
@@ -64,7 +64,8 @@ class SignIn(generics.CreateAPIView):
                     'user': {
                         'id': user.id,
                         'email': user.email,
-                        'token': user.get_auth_token()
+                        'token': user.get_auth_token(),
+                        'location': user.location
                     }
                 })
             # If they're not active, send 400
@@ -79,9 +80,27 @@ class SignOut(generics.DestroyAPIView):
     """Sign user out"""
     def delete(self, request):
         # Remove user's token from db
-        print('USER:', request.user)
         request.user.delete_token()
         # Logout (removing session data)
         logout(request)
         # Send logout confirmation to user
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+# ChangeLocation
+# class ChangeLocation(generics.UpdateAPIView):
+#     """Updates user's location"""
+#     def partial_update(self, request):
+#         print('USER----------->:', request.location)
+#         user = request.user
+#         location = request.location
+#         # update location in database
+#         user.set_location(self, location)
+
+#         return Response({
+#                     'user': {
+#                         'id': user.id,
+#                         'email': user.email,
+#                         'token': user.get_auth_token(),
+#                         'location': user.location
+#                     }
+#                 })
