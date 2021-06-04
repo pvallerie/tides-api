@@ -6,7 +6,8 @@ curl "http://localhost:8000/api/sign-up/" \
     "credentials": {
       "email": "'"${EMAIL}"'",
       "password": "'"${PASSWORD}"'",
-      "password_confirmation": "'"${PASSWORD}"'"
+      "password_confirmation": "'"${PASSWORD}"'",
+      "location": "'"${LOCATION}"'"
     }
   }'
 

@@ -28,6 +28,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     """Database model for users"""
     email = models.EmailField(max_length=225, unique=True)
     is_active = models.BooleanField(default=True)
+    location = models.CharField(max_length=200)
 
     # objects property will reference UserManager class
     objects = UserManager()
