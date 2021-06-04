@@ -79,6 +79,7 @@ class SignOut(generics.DestroyAPIView):
     """Sign user out"""
     def delete(self, request):
         # Remove user's token from db
+        print('USER:', request.user)
         request.user.delete_token()
         # Logout (removing session data)
         logout(request)

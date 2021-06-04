@@ -8,3 +8,5 @@ curl "http://localhost:8000/api/sign-in/" \
       "password": "'"${PASSWORD}"'"
     }
   }'
+
+  echo

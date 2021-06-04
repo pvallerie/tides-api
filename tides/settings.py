@@ -61,14 +61,18 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # my app
     'api',
+    # Django built-in apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework.authtoken'
+    # Django Rest Framework
+    'rest_framework.authtoken',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -100,6 +104,13 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'tides.wsgi.application'
+
+# Django Rest Framework
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ]
+}
 
 
 # Database
