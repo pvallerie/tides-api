@@ -55,7 +55,8 @@ class SignIn(generics.CreateAPIView):
         # If user is authenticated
         if user is not None:
             # And they're active
-            if user.is_active():
+            print('IS ACTIVE:', user.is_active)
+            if user.is_active:
                 # Log them in
                 login(request, user)
                 # Send response with user's token
@@ -72,4 +73,4 @@ class SignIn(generics.CreateAPIView):
         # If they're not authenticated
         else:
             return Response({ 'msg': 'The username and/or password is incorrect.' }, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
-            
+
