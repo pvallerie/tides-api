@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import PermissionsMixin
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied
@@ -100,20 +101,18 @@ class CreateLocation(generics.ListCreateAPIView):
         return Response(location.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # ChangeLocation
-# class ChangeLocation(generics.UpdateAPIView):
-#     """Updates user's location"""
-#     def partial_update(self, request):
-#         print('USER----------->:', request.location)
-#         user = request.user
-#         location = request.location
-#         # update location in database
-#         user.set_location(self, location)
+class ChangeLocation(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes=(IsAuthenticated,)
 
-#         return Response({
-#                     'user': {
-#                         'id': user.id,
-#                         'email': user.email,
-#                         'token': user.get_auth_token(),
-#                         'location': user.location
-#                     }
-#                 })
+    def partial_update(self, request, pk):
+        """Changes user location"""
+        location = get_object_or_404(Location, pk=pk)
+        if not request.user.id == location.owner.id:
+            raise PermissionDenied('Unauthorized: you do not own this location.')
+        request.data['location']['owner'] = request.user.id
+        data = CreateLocationSerializer(location, data=request.data['location'], partial=True)
+        if data.is_valid():
+            data.save()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(data.errors, status=status.HTTP_400_BAD_REQUEST)
+        

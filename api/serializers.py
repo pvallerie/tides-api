@@ -38,8 +38,4 @@ class CreateLocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
         fields = ('name', 'owner', 'id')
-
-# class ChangeLocationSerializer(serializers.Serializer):
-#     """Updates user's location"""
-#     model = get_user_model()
-#     new_location = serializers.CharField(max_length=200, required=True)
+        
