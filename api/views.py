@@ -92,13 +92,22 @@ class CreateLocation(generics.ListCreateAPIView):
 
     def post(self, request):
         """Create request"""
-        print('REQUEST DATA-------->', request.data)
         request.data['location']['owner'] = request.user.id
         location = CreateLocationSerializer(data=request.data['location'])
         if location.is_valid():
             location.save()
             return Response({ 'location': location.data }, status=status.HTTP_201_CREATED)
         return Response(location.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# Get Location
+class GetLocation(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes=(IsAuthenticated,)
+
+    def get(self, request):
+        """Get request"""
+        locations = Location.objects.all()
+        data = CreateLocationSerializer(locations, many=True).data
+        return Response({ 'locations': data })
 
 # ChangeLocation
 class ChangeLocation(generics.RetrieveUpdateDestroyAPIView):
