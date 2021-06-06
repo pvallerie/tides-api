@@ -7,7 +7,7 @@ from rest_framework import status, generics
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse
 
-from .serializers import UserSerializer, UserSignUpSerializer, CreateLocationSerializer
+from .serializers import UserSerializer, UserSignUpSerializer, GetLocationSerializer, CreateLocationSerializer
 from .models import User, Location
 
 # test view
@@ -85,7 +85,7 @@ class SignOut(generics.DestroyAPIView):
         # Send logout confirmation to user
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-# Create Location
+# Create and Get Location
 class CreateLocation(generics.ListCreateAPIView):
     permission_classes=(IsAuthenticated,)
     serializer_class=CreateLocationSerializer
@@ -99,15 +99,12 @@ class CreateLocation(generics.ListCreateAPIView):
             return Response({ 'location': location.data }, status=status.HTTP_201_CREATED)
         return Response(location.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# Get Location
-class GetLocation(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes=(IsAuthenticated,)
-
     def get(self, request):
-        """Get request"""
+        """Index request"""
         locations = Location.objects.all()
-        data = CreateLocationSerializer(locations, many=True).data
+        data = GetLocationSerializer(locations, many=True).data
         return Response({ 'locations': data })
+    
 
 # ChangeLocation
 class ChangeLocation(generics.RetrieveUpdateDestroyAPIView):
@@ -124,4 +121,12 @@ class ChangeLocation(generics.RetrieveUpdateDestroyAPIView):
             data.save()
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(data.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request, pk):
+        """Get request"""
+        # location = get_object_or_404(Location, filter(owner_id=1))
+        location = Location.objects.all()
+        data = GetLocationSerializer(location).data
+        print('LOCATION ---------> ', location)
+        return Response({ 'location': data })
         

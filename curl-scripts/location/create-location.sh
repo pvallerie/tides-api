@@ -1,4 +1,4 @@
-curl "http://localhost:8000/api/locations/" \
+curl "http://localhost:8000/api/locations" \
   --include \
   --request POST \
   --header "Content-Type: application/json" \

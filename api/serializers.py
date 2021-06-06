@@ -38,4 +38,11 @@ class CreateLocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
         fields = ('name', 'owner', 'id')
+
+class GetLocationSerializer(serializers.ModelSerializer):
+    """Get location"""
+    owner = UserSerializer()
+    class Meta:
+        model = Location
+        fields = ('name', 'owner', 'id')
         
