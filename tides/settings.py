@@ -115,10 +115,8 @@ REST_FRAMEWORK = {
     ]
 }
 
-# for dev: ['http://localhost:3000']
-CORS_ORIGIN_WHITELIST = [
-    os.getenv('CLIENT_ORIGIN')
-  ]
+# for deployment: [os.getenv('CLIENT_ORIGIN')]
+CORS_ORIGIN_WHITELIST = ['http://localhost:3000']
 
 
 # Database
