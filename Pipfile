@@ -9,6 +9,7 @@ django-rest-auth = "*"
 django-cors-headers = "*"
 gunicorn = "*"
 whitenoise = "*"
+psycopg2 = "*"
 
 [dev-packages]
 
